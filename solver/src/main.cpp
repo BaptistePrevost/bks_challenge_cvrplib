@@ -1,5 +1,6 @@
 #include <iostream>
+#include "instance.hpp"
 
 int main() {
-    std::cout << "Hello world !" << std::endl;
+    Instance instance("XLTEST/XLTEST-n1048-k139.vrp");
 }
