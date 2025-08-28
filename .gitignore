@@ -1,0 +1,4 @@
+.vscode
+XLTEST
+solver/obj
+solver/bin
