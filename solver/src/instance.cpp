@@ -1,11 +1,17 @@
 #include "instance.hpp"
 #include <fstream>
 #include <iostream>
+#include <cmath>
+
+[[ nodiscard ]]
+double Coordinate::distTo(const Coordinate& other) const {
+    return std::sqrt((other.x - x)*(other.x-x) + (other.y-y)*(other.y-y));
+}
 
 Instance::Instance(std::string path) {
     std::ifstream f(path);
     if (!f.is_open()) {
-        std::cerr << "Error opening the file with path " << path;
+        std::cerr << "Error opening the file with path " << path << std::endl;
         return;
     }
     
@@ -18,6 +24,58 @@ Instance::Instance(std::string path) {
     parseCapacity(f);
     parseCoordinates(f);
     parseDemands(f);
+    parseDepot(f);
+
+    computeDistancesWithDepot();
+    computeDistances();
+}
+
+[[ nodiscard ]]
+const int Instance::dimension() const {
+    return dimension_;
+}
+
+[[ nodiscard ]]
+const int Instance::nbCustomers() const {
+    return nbCustomers_;
+}
+
+[[ nodiscard ]]
+const int Instance::capacity() const {
+    return capacity_;
+}
+
+[[ nodiscard ]]
+const std::vector<Coordinate>& Instance::coordinates() const {
+    return coordinates_;
+}
+
+[[ nodiscard ]]
+const std::vector<int>& Instance::demands() const {
+    return demands_;
+}
+
+[[ nodiscard ]]
+const Coordinate& Instance::pointCoordinate(int i) const {
+    if (i < 0 || i >= dimension_) {
+        std::cerr << "Wrong point index " << i << std::endl;
+        throw;
+    }
+    return coordinates_[i];
+}
+
+[[ nodiscard ]]
+const Coordinate& Instance::depotCoordinate() const {
+    return coordinates_[0];
+}
+
+[[ nodiscard ]]
+const Coordinate& Instance::customerCoordinate(int c) const {
+    if (c < 0 || c >= nbCustomers_) {
+        std::cerr << "Wrong customer index " << c << std::endl;
+        throw;
+    }
+    return coordinates_[c+1];
 }
 
 void Instance::parseName(std::ifstream& f) {
@@ -40,6 +98,7 @@ void Instance::parseDimension(std::ifstream& f) {
     std::getline(f, s);
     s.erase(0, 12);
     dimension_ = std::stoi(s);
+    nbCustomers_ = dimension_-1;
 }
 
 void Instance::parseEdgeWeightType(std::ifstream& f) {
@@ -83,5 +142,32 @@ void Instance::parseDemands(std::ifstream& f) {
         while (s[valueStart] == ' ') valueStart++;
         s.erase(0, valueStart);
         demands_.push_back(std::stoi(s));
+    }
+}
+
+void Instance::parseDepot(std::ifstream& f) {
+    std::string s;
+    std::getline(f, s);
+    std::getline(f, s);
+    int depotIndex = std::stoi(s);
+    if (depotIndex != 1) {
+        std::cerr << "Error parsing the file : Depot should be 1, not " << depotIndex << std::endl;
+        throw;
+    }
+}
+
+void Instance::computeDistancesWithDepot() {
+    distancesWithDepot_.resize(nbCustomers_);
+    for (int c=0; c<nbCustomers_; c++)
+        distancesWithDepot_[c] = depotCoordinate().distTo(customerCoordinate(c));
+}
+
+void Instance::computeDistances() {
+    distances_.resize(nbCustomers_);
+    for (int c=0; c<nbCustomers_; c++) {
+        distances_[c].resize(nbCustomers_);
+        for (int d=0; d<nbCustomers_; d++) {
+            distances_[c][d] = pointCoordinate(c).distTo(pointCoordinate(d));
+        }
     }
 }
