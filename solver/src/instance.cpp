@@ -57,10 +57,8 @@ const std::vector<int>& Instance::demands() const {
 
 [[ nodiscard ]]
 const Coordinate& Instance::pointCoordinate(int i) const {
-    if (i < 0 || i >= dimension_) {
-        std::cerr << "Wrong point index " << i << std::endl;
-        throw;
-    }
+    if (i < 0 || i >= dimension_)
+        throw std::string("Wrong point index");
     return coordinates_[i];
 }
 
@@ -71,10 +69,8 @@ const Coordinate& Instance::depotCoordinate() const {
 
 [[ nodiscard ]]
 const Coordinate& Instance::customerCoordinate(int c) const {
-    if (c < 0 || c >= nbCustomers_) {
-        std::cerr << "Wrong customer index " << c << std::endl;
-        throw;
-    }
+    if (c < 0 || c >= nbCustomers_)
+        throw std::string("Wrong customer index");
     return coordinates_[c+1];
 }
 
@@ -150,10 +146,8 @@ void Instance::parseDepot(std::ifstream& f) {
     std::getline(f, s);
     std::getline(f, s);
     int depotIndex = std::stoi(s);
-    if (depotIndex != 1) {
-        std::cerr << "Error parsing the file : Depot should be 1, not " << depotIndex << std::endl;
-        throw;
-    }
+    if (depotIndex != 1)
+        throw std::string("Error parsing the depot");
 }
 
 void Instance::computeDistancesWithDepot() {
