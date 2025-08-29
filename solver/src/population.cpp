@@ -4,8 +4,13 @@
 Population::Population(Instance& instance, Parameters& parameters) : instance_(instance), parameters_(parameters) {}
 
 void Population::generate() {
-    individuals_.clear();
+    solutions_.resize(parameters_.populationSize());
     for (int i=0; i<parameters_.populationSize(); i++) {
-        individuals_.emplace_back(instance_);
+        solutions_[i] = Solution(instance_, parameters_);
     }
+}
+
+[[ nodiscard ]]
+std::vector<Solution>& Population::solutions() {
+    return solutions_;
 }

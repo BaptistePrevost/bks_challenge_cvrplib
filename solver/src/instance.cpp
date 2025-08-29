@@ -56,6 +56,13 @@ const std::vector<int>& Instance::demands() const {
 }
 
 [[ nodiscard ]]
+const int Instance::demand(int c) const {
+    if (c < 0 || c >= nbCustomers_)
+        throw std::string("Wrong customer index");
+    return demands_[c];
+}
+
+[[ nodiscard ]]
 const Coordinate& Instance::pointCoordinate(int i) const {
     if (i < 0 || i >= dimension_)
         throw std::string("Wrong point index");
@@ -72,6 +79,17 @@ const Coordinate& Instance::customerCoordinate(int c) const {
     if (c < 0 || c >= nbCustomers_)
         throw std::string("Wrong customer index");
     return coordinates_[c+1];
+}
+
+[[ nodiscard ]]
+const double Instance::distanceWithDepot(int c) const {
+    return distancesWithDepot_[c];
+}
+
+
+[[ nodiscard ]]
+const double Instance::distance(int c, int d) const {
+    return distances_[c][d];
 }
 
 void Instance::parseName(std::ifstream& f) {

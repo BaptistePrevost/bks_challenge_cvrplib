@@ -18,14 +18,20 @@ class Instance {
     const int dimension() const;
     const int nbCustomers() const;
     const int capacity() const;
-    const std::vector<Coordinate>& coordinates() const;
-    const std::vector<int>& demands() const;
+
+    const int demand(int c) const;
 
     const Coordinate& pointCoordinate(int i) const;
     const Coordinate& depotCoordinate() const;
     const Coordinate& customerCoordinate(int c) const;
 
+    const double distanceWithDepot(int c) const;
+    const double distance(int c, int d) const;
+    
     private:
+    const std::vector<Coordinate>& coordinates() const;
+    const std::vector<int>& demands() const;
+
     void parseName(std::ifstream& f);
     void parseComment(std::ifstream& f);
     void parseType(std::ifstream& f);
