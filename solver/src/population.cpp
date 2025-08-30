@@ -14,3 +14,9 @@ void Population::generate() {
 std::vector<Solution>& Population::solutions() {
     return solutions_;
 }
+
+[[ nodiscard ]]
+const Solution& Population::getRandomSolution() const {
+    int index = std::rand() % solutions_.size();
+    return solutions_[index];
+}

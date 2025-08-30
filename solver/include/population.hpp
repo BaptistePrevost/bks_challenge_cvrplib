@@ -11,6 +11,7 @@ class Population {
 
     void generate();
     std::vector<Solution>& solutions();
+    const Solution& getRandomSolution() const;
 
     private:
     Instance& instance_;
