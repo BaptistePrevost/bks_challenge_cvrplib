@@ -1,22 +1,36 @@
 #include "population.hpp"
 #include "parameters.hpp"
 
-Population::Population(Instance& instance, Parameters& parameters) : instance_(instance), parameters_(parameters) {}
+Population::Population(Instance& instance, Parameters& parameters, Split& split) : 
+        instance_(instance), 
+        parameters_(parameters),
+        split_(split) {}
 
 void Population::generate() {
-    solutions_.resize(parameters_.populationSize());
-    for (int i=0; i<parameters_.populationSize(); i++) {
-        solutions_[i] = Solution(instance_, parameters_);
+    for (int i = 0; i < parameters_.populationSize(); i++) {
+        Solution solution = Solution(instance_, parameters_);
+        split_.process(solution);
+        solutions_.insert(solution);
     }
 }
 
 [[ nodiscard ]]
-std::vector<Solution>& Population::solutions() {
+std::set<Solution>& Population::solutions() {
     return solutions_;
 }
 
 [[ nodiscard ]]
 const Solution& Population::getRandomSolution() const {
     int index = std::rand() % solutions_.size();
-    return solutions_[index];
+    return *(std::next(solutions_.begin(), index));
+}
+
+void Population::addSolution(Solution& solution) {
+    solutions_.insert(solution);
+    if (static_cast<int>(solutions_.size()) > parameters_.populationSize())
+        solutions_.erase(std::prev(solutions_.end()));
+}
+
+const Solution& Population::getBestSolution() const {
+    return *solutions_.begin();
 }

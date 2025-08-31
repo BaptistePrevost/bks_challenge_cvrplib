@@ -5,7 +5,7 @@
 
 [[ nodiscard ]]
 double Coordinate::distTo(const Coordinate& other) const {
-    return std::sqrt((other.x - x)*(other.x-x) + (other.y-y)*(other.y-y));
+    return std::floor(std::sqrt((other.x - x)*(other.x - x) + (other.y - y)*(other.y - y)) + 0.5);
 }
 
 Instance::Instance(std::string path) {
@@ -59,7 +59,7 @@ const std::vector<int>& Instance::demands() const {
 const int Instance::demand(int c) const {
     if (c < 0 || c >= nbCustomers_)
         throw std::string("Wrong customer index");
-    return demands_[c];
+    return demands_[c+1];
 }
 
 [[ nodiscard ]]
@@ -136,6 +136,9 @@ void Instance::parseCoordinates(std::ifstream& f) {
         int valueStart = s.find(' ');
         while (s[valueStart] == ' ') valueStart++;
         s.erase(0, valueStart);
+        valueStart = s.find(' ');
+        while (s[valueStart] == ' ') valueStart++;
+        s.erase(0, valueStart);
         int x = std::stoi(s);
         
         valueStart = s.find(' ');
@@ -179,7 +182,7 @@ void Instance::computeDistances() {
     for (int c=0; c<nbCustomers_; c++) {
         distances_[c].resize(nbCustomers_);
         for (int d=0; d<nbCustomers_; d++) {
-            distances_[c][d] = pointCoordinate(c).distTo(pointCoordinate(d));
+            distances_[c][d] = customerCoordinate(c).distTo(customerCoordinate(d));
         }
     }
 }

@@ -6,5 +6,5 @@ class Crossover {
 
     public:
     virtual ~Crossover() = default;
-    virtual void cross(Solution& left, Solution& right, Solution& child) = 0;
+    virtual void cross(const Solution& left, const Solution& right, Solution& child) = 0;
 };

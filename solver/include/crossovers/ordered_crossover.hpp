@@ -8,7 +8,7 @@ class OrderedCrossover : public Crossover {
     public:
     OrderedCrossover(Instance& instance);
 
-    void cross(Solution& left, Solution& right, Solution& child) override final;
+    void cross(const Solution& left, const Solution& right, Solution& child) override final;
 
     private:
     Instance& instance_;

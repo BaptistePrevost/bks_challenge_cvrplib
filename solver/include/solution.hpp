@@ -15,6 +15,7 @@ class Solution {
     const int nbRoutes() const;
     const double totalDistance() const;
     const double fitness() const;
+    const bool operator<(const Solution& other) const;
 
     void addCustomer(int customer, int index);
 

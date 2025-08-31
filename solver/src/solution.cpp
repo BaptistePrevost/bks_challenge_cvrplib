@@ -83,3 +83,7 @@ bool Solution::check(const Instance& instance) const {
         return false;
     return true;
 }
+
+const bool Solution::operator<(const Solution& other) const {
+    return fitness() < other.fitness();
+}

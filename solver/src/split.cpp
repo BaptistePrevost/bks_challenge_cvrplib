@@ -1,4 +1,5 @@
 #include "split.hpp"
+#include <iostream>
 
 Split::Split(Instance& instance) : instance_(instance), route_(instance.nbCustomers()) {}
 

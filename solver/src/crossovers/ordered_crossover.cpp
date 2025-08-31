@@ -4,7 +4,7 @@
 OrderedCrossover::OrderedCrossover(Instance& instance) :
         instance_(instance), inserted_(instance.nbCustomers(), false) {}
 
-void OrderedCrossover::cross(Solution& left, Solution& right, Solution& child) {
+void OrderedCrossover::cross(const Solution& left, const Solution& right, Solution& child) {
     std::fill(inserted_.begin(), inserted_.end(), false);
 
     int index = std::rand() % instance_.nbCustomers();
