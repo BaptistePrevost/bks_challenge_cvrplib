@@ -8,6 +8,7 @@ class Solution {
     
     public:
     Solution();
+    Solution(const Solution& solution);
     Solution(const Instance& instance, const Parameters& parameters);
 
     const std::vector<int>& tour() const;
@@ -21,6 +22,7 @@ class Solution {
 
     void resetRoutes();
     void addRoute(const std::vector<int>& route, int routeSize, double routeDistance);
+    void setFitness(double fitness);
 
     bool check(const Instance& instance) const;
 
@@ -29,4 +31,5 @@ class Solution {
     std::vector<std::vector<int>> routes_;
     int nbRoutes_;
     double totalDistance_;
+    double fitness_;
 };

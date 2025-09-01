@@ -4,6 +4,10 @@
 
 Solution::Solution() {}
 
+Solution::Solution(const Solution& solution) :
+    tour_(solution.tour()),
+    fitness_(solution.fitness()) {}
+
 Solution::Solution(const Instance& instance, const Parameters& parameters) {
     tour_.resize(instance.nbCustomers());
     for (int c=0; c<instance.nbCustomers(); c++)
@@ -36,7 +40,7 @@ const double Solution::totalDistance() const {
 
 [[ nodiscard ]]
 const double Solution::fitness() const {
-    return totalDistance_;
+    return fitness_;
 }
 
 void Solution::addCustomer(int customer, int index) {
@@ -56,6 +60,10 @@ void Solution::addRoute(const std::vector<int>& route, int routeSize, double rou
         routes_[nbRoutes_][i] = route[i];
     totalDistance_ += routeDistance;
     nbRoutes_++;
+}
+
+void Solution::setFitness(double fitness) {
+    fitness_ = fitness;
 }
 
 [[ nodiscard ]]

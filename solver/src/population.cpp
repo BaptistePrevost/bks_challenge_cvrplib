@@ -26,7 +26,7 @@ const Solution& Population::getRandomSolution() const {
 }
 
 void Population::addSolution(Solution& solution) {
-    solutions_.insert(solution);
+    solutions_.insert(Solution(solution));
     if (static_cast<int>(solutions_.size()) > parameters_.populationSize())
         solutions_.erase(std::prev(solutions_.end()));
 }
