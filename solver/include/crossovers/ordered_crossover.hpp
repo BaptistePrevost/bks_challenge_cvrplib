@@ -2,6 +2,7 @@
 
 #include "crossovers/crossover.hpp"
 #include "instance.hpp"
+#include "bipartition.hpp"
 
 class OrderedCrossover : public Crossover {
 
@@ -12,7 +13,7 @@ class OrderedCrossover : public Crossover {
 
     private:
     Instance& instance_;
-    std::vector<bool> inserted_;
+    Bipartition inserted_;
     /** 
      * TODO : Benchmark with a bitset
      * One could also use a vector of timestamps : 
