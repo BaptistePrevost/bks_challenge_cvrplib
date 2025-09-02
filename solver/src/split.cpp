@@ -26,6 +26,6 @@ void Split::process(Solution& solution) {
         }
         routeDistance += instance_.distanceWithDepot(route_[0]) + (routeSize > 1 ? instance_.distanceWithDepot(route_[routeSize-1]) : 0);
         solution.addRoute(route_, routeSize, routeDistance);
-        solution.setFitness(solution.totalDistance());
     }
+    solution.setFitness(solution.totalDistance());
 }
