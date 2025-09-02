@@ -12,12 +12,12 @@ Genetic::Genetic(Instance& instance, Parameters& parameters, Crossover* crossove
 }
 
 void Genetic::run() {
-    for (int iter = 0; iter < 1e6; iter++) {
+    for (int iter = 0; iter < 1e5; iter++) {
         crossover_->cross(population_.getRandomSolution(), population_.getRandomSolution(), child_);
         split_.process(child_);
         population_.addSolution(child_);
         if (iter % 1000 == 0) {
-            std::cout << "Iter " << iter << " --- " << population_.getBestSolution().fitness() << std::endl;
+            std::cout << "Iter " << iter << " --- " << population_.getBestSolution().fitness() << " - " << population_.getBestSolution().nbRoutes() << std::endl;
         }
     }
     for (const std::vector<int>& route : population_.getBestSolution().routes()) {

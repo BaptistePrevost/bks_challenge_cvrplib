@@ -2,7 +2,7 @@
 
 #include "crossovers/crossover.hpp"
 #include "instance.hpp"
-#include "bipartition.hpp"
+#include "bipartitions/swap_bipartition.hpp"
 
 class OrderedCrossover : public Crossover {
 
@@ -13,7 +13,7 @@ class OrderedCrossover : public Crossover {
 
     private:
     Instance& instance_;
-    Bipartition inserted_;
+    SwapBipartition inserted_;
     /** 
      * TODO : Benchmark with a bitset
      * One could also use a vector of timestamps : 
