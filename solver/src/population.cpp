@@ -4,33 +4,45 @@
 Population::Population(Instance& instance, Parameters& parameters, Split& split) : 
         instance_(instance), 
         parameters_(parameters),
-        split_(split) {}
+        split_(split),
+        solutions_(parameters.maxPopulationSize() + 1) {}
 
 void Population::generate() {
     for (int i = 0; i < parameters_.populationSize(); i++) {
-        Solution solution = Solution(instance_, parameters_);
-        split_.process(solution);
-        solutions_.insert(solution);
+        solutions_[i] = Solution(instance_, parameters_);
+        split_.process(solutions_[i]);
+        positions_[solutions_[i].fitness()] = i;
     }
-}
-
-[[ nodiscard ]]
-std::set<Solution>& Population::solutions() {
-    return solutions_;
+    nbSolutions_ = parameters_.populationSize();
 }
 
 [[ nodiscard ]]
 const Solution& Population::getRandomSolution() const {
-    int index = std::rand() % solutions_.size();
-    return *(std::next(solutions_.begin(), index));
+    int index = std::rand() % nbSolutions_;
+    return solutions_[index];
 }
 
-void Population::addSolution(Solution& solution) {
-    solutions_.insert(Solution(solution));
-    if (static_cast<int>(solutions_.size()) > parameters_.populationSize())
-        solutions_.erase(std::prev(solutions_.end()));
+void Population::addSolution(const Solution& solution) {
+    if (positions_.find(solution.fitness()) != positions_.end()) return;
+    if (std::prev(positions_.end())->first <= solution.fitness()) return;
+    if (nbSolutions_ >= parameters_.maxPopulationSize()) {
+        while (nbSolutions_ >= parameters_.populationSize()) {
+            removeWorstSolution();
+        }
+    }
+    solutions_[nbSolutions_] = Solution(solution);
+    positions_[solution.fitness()] = nbSolutions_;
+    nbSolutions_++;
 }
 
 const Solution& Population::getBestSolution() const {
-    return *solutions_.begin();
+    return solutions_[positions_.begin()->second];
+}
+
+void Population::removeWorstSolution() {
+    nbSolutions_--;
+    int worstPosition = std::prev(positions_.end())->second;
+    positions_[solutions_[nbSolutions_].fitness()] = worstPosition;
+    std::swap(solutions_[worstPosition], solutions_[nbSolutions_]);
+    positions_.erase(solutions_[nbSolutions_].fitness());
 }

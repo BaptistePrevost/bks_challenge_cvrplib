@@ -12,7 +12,7 @@ Genetic::Genetic(Instance& instance, Parameters& parameters, Crossover* crossove
 }
 
 void Genetic::run() {
-    for (int iter = 0; iter < 1e5; iter++) {
+    for (int iter = 0; iter < 1e6; iter++) {
         crossover_->cross(population_.getRandomSolution(), population_.getRandomSolution(), child_);
         split_.process(child_);
         population_.addSolution(child_);
