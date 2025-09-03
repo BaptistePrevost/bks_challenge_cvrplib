@@ -20,11 +20,8 @@ void Genetic::run() {
             std::cout << "Iter " << iter << " --- " << population_.getBestSolution().fitness() << " - " << population_.getBestSolution().nbRoutes() << std::endl;
         }
     }
-    for (const std::vector<int>& route : population_.getBestSolution().routes()) {
-        if (route.size() == 0) continue;
-        for (int customer : route) {
-            std::cout << customer << " ";
-        }
-        std::cout << std::endl;
-    }
+    Solution bestSolution = Solution(population_.getBestSolution());
+    split_.process(bestSolution);
+    std::cout << "CHECK : " << bestSolution.check(instance_) << std::endl;
+    bestSolution.show();
 }

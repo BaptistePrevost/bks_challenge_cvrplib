@@ -5,8 +5,9 @@
 Solution::Solution() {}
 
 Solution::Solution(const Solution& solution) :
-    tour_(solution.tour()),
-    fitness_(solution.fitness()) {}
+        tour_(solution.tour()),
+        routes_(solution.routes().size()),
+        fitness_(solution.fitness()) {}
 
 Solution::Solution(const Instance& instance, const Parameters& parameters) {
     tour_.resize(instance.nbCustomers());
@@ -76,17 +77,23 @@ bool Solution::check(const Instance& instance) const {
         seen[c] = true;
     }
     if (nbSeens != instance.nbCustomers()) 
-        return false;
+    return false;
     
     nbSeens = 0;
+    int fitness = 0;
     std::fill(seen.begin(), seen.end(), false);
-    for (const std::vector<int>& route : routes_) {
-        for (int c : route) {
-            if (!seen[c]) nbSeens++;
+    for (int r = 0; r < nbRoutes_; r++) {
+        for (int i = 0; i < routes_[r].size(); i++) {
+            if (!seen[routes_[r][i]]) nbSeens++;
             else return false;
-            seen[c] = true;
+            seen[routes_[r][i]] = true;
+            if (i == 0) fitness += instance.distanceWithDepot(routes_[r][i]);
+            else fitness += instance.distance(routes_[r][i-1], routes_[r][i]);
         }
+        fitness += instance.distanceWithDepot(routes_[r].back());
     }
+    if (fitness != fitness_)
+        return false;
     if (nbSeens != instance.nbCustomers())
         return false;
     return true;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <iostream>
 #include "instance.hpp"
 #include "parameters.hpp"
 
@@ -48,6 +49,18 @@ class Solution {
 
     /** For debug purpose, checks the integrity of the solution */
     bool check(const Instance& instance) const;
+
+    void show() {
+        
+        std::cout << "Best solution with fitness " << fitness() << " and " << nbRoutes() << " routes." << std::endl;
+        for (const std::vector<int>& route : routes()) {
+            if (route.size() == 0) continue;
+            for (int customer : route) {
+                std::cout << customer << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
 
     private:
     std::vector<int> tour_;                 //Giant tour
